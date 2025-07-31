@@ -27,15 +27,24 @@ export default function PermitaSeHeader({
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
-  const categorias = ["vestidos", "calças", "macacões", "blusas", "shorts" , "Promoção"];
+  const categorias = [
+    "vestidos",
+    "calças",
+    "macacões",
+    "blusas",
+    "shorts",
+    "Promoção",
+  ];
 
   return (
     <div className="w-full bg-black relative z-50">
       {/* Header */}
       <div className="flex items-center justify-between px-6 py-4 max-w-7xl mx-auto">
-        <h1 className="text-2xl font-bold text-white tracking-wide">
-          Permita-se
-        </h1>
+        <img
+          src="/img/logo.png"
+          alt="Permita-se"
+          className="h-10 scale-x-150 object-contain"
+        />
 
         <div className="flex-1 max-w-md mx-8 hidden sm:block">
           <div className="relative">

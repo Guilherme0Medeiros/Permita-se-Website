@@ -11,30 +11,31 @@ function capitalizeWords(str: string) {
 export default function CategoriasGrid() {
   const navigate = useNavigate()
   const categorias = [
-    {
-      id: 1,
-      nome: "vestidos",
-      titulo: "VESTIDOS EM SALE",
-      imagem: "/img/vestidos.jpg",
-    },
+    
     {
       id: 2,
       nome: "calças",
       titulo: "CALÇAS EM SALE",
       imagem: "/img/calcas.jpg",
     },
+    
+    {
+      id: 2,
+      nome: "blusas",
+      titulo: "BLUSAS EM SALE",
+      imagem: "/img/blusas.jpg",
+    },
     {
       id: 3,
       nome: "macacões",
       titulo: "MACACÕES EM SALE",
-      imagem: "/img/macacoes.jpg",
+      imagem: "https://img.freepik.com/fotos-gratis/retrato-ao-ar-livre-de-uma-mulher-caucasiana-com-macacao-classico-com-batom-vermelho-de-ferias-fora-do-hotel-villa_343596-420.jpg",
     },
     {
       id: 4,
-      nome: "blusas",
-      titulo: "BLUSAS EM SALE",
-      imagem:
-        "https://vistalelis.vtexassets.com/arquivos/ids/391839-1920-auto?v=638875830785330000&width=1920&height=auto&aspect=true",
+      nome: "vestidos",
+      titulo: "VESTIDOS EM SALE",
+      imagem: "/img/vestidos.jpg",
     },
     {
       id: 5,
@@ -42,16 +43,15 @@ export default function CategoriasGrid() {
       titulo: "SHORTS EM SALE",
       imagem: "/img/shorts.jpg",
     },
+    
   ]
 
   return (
     <div className="relative bg-red-900 py-12 md:py-20 px-6">
       {" "}
-      {/* Fundo laranja mais escuro/vinho */}
-      {/* Título */}
       <div className="text-center mb-12">
         <h2 className="text-white text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tight mb-4">
-          até 70%OFF nas peças do outlet3
+          até 50% de Desconto nas Peças
         </h2>
         <p className="text-orange-200 text-lg md:text-xl font-light max-w-2xl mx-auto">
           Aproveite as últimas unidades com descontos incríveis!

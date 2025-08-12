@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Search, MapPin, User, Heart, ShoppingCart, Menu } from "lucide-react";
+import { Search, MapPin, User, Heart, ShoppingCart, Menu, Shield } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 export default function PermitaSeHeader({
   isAuthenticated,
@@ -16,6 +17,7 @@ export default function PermitaSeHeader({
   setIsCartOpen: (open: boolean) => void;
 }) {
   const navigate = useNavigate();
+  const { isAdmin } = useAuth(); 
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -68,6 +70,18 @@ export default function PermitaSeHeader({
           <button className="text-white hover:bg-gray-900 p-2 rounded-md hidden md:inline-block">
             <MapPin className="h-4 w-4" />
           </button>
+
+          {/* Botão Admin só aparece para admins */}
+          {isAdmin && (
+            <button
+              onClick={() => navigate("/admin/produtos")}
+              className="text-white hover:bg-gray-900 p-2 rounded-md hidden md:inline-flex items-center gap-2"
+              title="Administração de produtos"
+            >
+              <Shield className="h-4 w-4" />
+              <span className="text-sm font-medium">Admin Produtos</span>
+            </button>
+          )}
 
           <div className="relative hidden md:inline-block">
             <button
@@ -141,9 +155,20 @@ export default function PermitaSeHeader({
         </div>
       </div>
 
-      {/* Menu mobile (sem dropdowns agora) */}
+      {/* Menu mobile (inclui o atalho Admin se for admin) */}
       {isMobile && isMobileMenuOpen && (
         <div className="bg-black border-t border-gray-800 px-6 py-4 space-y-4 md:hidden">
+          {isAdmin && (
+            <button
+              onClick={() => {
+                navigate("/admin/produtos");
+                setIsMobileMenuOpen(false);
+              }}
+              className="block text-left w-full text-white text-sm py-1 hover:text-orange-400"
+            >
+              Admin
+            </button>
+          )}
           {categorias.map((cat) => (
             <button
               key={cat}

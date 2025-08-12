@@ -5,7 +5,7 @@ import type React from "react";
 import { useEffect, useState } from "react";
 import api from "../services/api";
 import { ProductCard } from "../components/ProductCard";
-import Navbar from "../components/Navbar"; // ✅ IMPORTAÇÃO ADICIONADA
+import Navbar from "../components/Navbar"; 
 
 interface Categoria {
   id: number;

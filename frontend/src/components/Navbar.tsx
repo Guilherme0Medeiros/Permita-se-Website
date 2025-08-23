@@ -1,5 +1,3 @@
-"use client";
-
 import { useEffect, useState } from "react";
 import { Search, MapPin, User, Heart, ShoppingCart, Menu, Shield } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -42,11 +40,13 @@ export default function PermitaSeHeader({
     <div className="w-full bg-black relative z-50">
       {/* Header */}
       <div className="flex items-center justify-between px-6 py-4 max-w-7xl mx-auto">
-        <img
-          src="/img/logo.png"
-          alt="Permita-se"
-          className="h-10 scale-x-150 object-contain"
-        />
+        <a href="/" className="flex items-center">
+          <img
+            src="/img/logo4.png"
+            alt="Permita-se"
+            className="h-16 scale-x-100 object-contain"
+          />
+        </a>
 
         <div className="flex-1 max-w-md mx-8 hidden sm:block">
           <div className="relative">

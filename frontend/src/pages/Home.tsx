@@ -66,19 +66,7 @@ export default function Home() {
     }
   }
 
-  const handleRemoveItem = async (id: number) => {
-    try {
-      await api.delete("/carrinhos/remover-item/", {
-        data: {
-          produto: id,
-          quantidade: 1,
-        },
-      })
-      setCartItems((prev) => prev.filter((item) => item.id !== id))
-    } catch (error) {
-      console.error("Erro ao remover item do carrinho:", error)
-    }
-  }
+  
 
   const handleRemoveAllItem = async (id: number) => {
     try {

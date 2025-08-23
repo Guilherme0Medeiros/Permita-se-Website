@@ -8,17 +8,15 @@ import CartSidebar from "../components/CartSidebar";
 import ProductThumbnails from "../components/ProductThumbnails";
 import { Heart } from "lucide-react";
 
-/** === Tipo padronizado com a Home (evita conflito de tipos) === */
 interface Produto {
   id: number;
   nome: string;
   preco: number;
-  descricao: string;         // obrigatório (igual Home)
-  imagem: string;            // obrigatório (igual Home)
-  quantidade: number;        // obrigatório (igual Home)
-  em_promocao: boolean;      // presente na Home
+  descricao: string;         
+  imagem: string;            
+  quantidade: number;        
+  em_promocao: boolean;      
 
-  // extras usados só nesta página:
   imagem_url_final?: string;
   imagens_extra?: { imagem: string }[];
 }
@@ -31,9 +29,7 @@ export default function ProductPage() {
   const [produto, setProduto] = useState<Produto | null>(null);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [selectedSize, setSelectedSize] = useState("");
-  const [cep, setCep] = useState("");
 
-  // Carrinho / Sidebar (mesmo padrão da Home)
   const [cartItems, setCartItems] = useState<Produto[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
 
@@ -43,7 +39,7 @@ export default function ProductPage() {
       .get(`/produtos/${productId}/`)
       .then((res) => {
         const p = res.data;
-        // normaliza para bater com o tipo da Home
+        
         const normalizado: Produto = {
           id: p.id,
           nome: p.nome,
@@ -52,7 +48,6 @@ export default function ProductPage() {
           imagem: p.imagem ?? p.imagem_url_final ?? "",
           quantidade: 1,
           em_promocao: !!p.em_promocao,
-          // extras
           imagem_url_final: p.imagem_url_final,
           imagens_extra: p.imagens_extra,
         };
@@ -68,8 +63,6 @@ export default function ProductPage() {
     ...(produto.imagens_extra?.map((img) => img.imagem) || []),
   ].filter(Boolean) as string[];
 
-
-  // ====== Handlers do carrinho (iguais ao fluxo da Home) ======
   const handleAddToCart = async (id: number) => {
     try {
       await api.post("/carrinhos/adicionar-item/", { produto: id, quantidade: 1 });
@@ -81,12 +74,10 @@ export default function ProductPage() {
             item.id === id ? { ...item, quantidade: item.quantidade + 1 } : item
           );
         }
-        // adiciona o produto atual já normalizado
         return [
           ...prev,
           {
             ...produto,
-            // garante imagem preenchida para a Sidebar
             imagem: produto.imagem || produto.imagem_url_final || "",
             quantidade: 1,
           },
@@ -145,11 +136,10 @@ export default function ProductPage() {
   const handleCheckout = () => {
     navigate("/checkout", { state: { cartItems } });
   };
-  // ============================================================
 
   return (
     <>
-      {/* Navbar - passa cartItems e controle da sidebar como na Home */}
+      {/* Navbar */}
       <Navbar
         isAuthenticated={true}
         logout={() => {}}

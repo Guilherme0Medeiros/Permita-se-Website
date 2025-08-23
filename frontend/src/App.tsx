@@ -3,8 +3,8 @@ import Home from "./pages/Home";
 import Checkout from "./pages/Checkout";
 import ProductAdminPage from "./pages/ProductAdminPage";
 import LoginPage from "./pages/LoginPage";
-import Categoria from "./pages/Categoria"; // ✅ nova página importada
-import ProductPage from "./pages/ProductPage"; // ✅ nova importação
+import Categoria from "./pages/Categoria"; 
+import ProductPage from "./pages/ProductPage"; 
 import { AuthProvider } from "./context/AuthContext";
 
 function App() {
@@ -16,7 +16,7 @@ function App() {
         <Route path="/admin/produtos" element={<ProductAdminPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/categoria/:nome" element={<Categoria />} />
-        <Route path="/produto/:id" element={<ProductPage />} /> {/* ✅ nova rota */}
+        <Route path="/produto/:id" element={<ProductPage />} /> 
       </Routes>
     </AuthProvider>
   );

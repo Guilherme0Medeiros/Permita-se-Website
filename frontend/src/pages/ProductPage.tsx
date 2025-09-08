@@ -8,14 +8,23 @@ import CartSidebar from "../components/CartSidebar";
 import ProductThumbnails from "../components/ProductThumbnails";
 import { Heart } from "lucide-react";
 
+// Função para as letras ficarem maiúsculas no inicio das palavras
+function capitalizeWords(str: string) {
+  return str
+    .toLowerCase()
+    .replace(/\p{L}+/gu, (word) => 
+      word.charAt(0).toLocaleUpperCase("pt-BR") + word.slice(1)
+    )
+}
+
 interface Produto {
   id: number;
   nome: string;
   preco: number;
-  descricao: string;         
-  imagem: string;            
-  quantidade: number;        
-  em_promocao: boolean;      
+  descricao: string;
+  imagem: string;
+  quantidade: number;
+  em_promocao: boolean;
 
   imagem_url_final?: string;
   imagens_extra?: { imagem: string }[];
@@ -39,7 +48,7 @@ export default function ProductPage() {
       .get(`/produtos/${productId}/`)
       .then((res) => {
         const p = res.data;
-        
+
         const normalizado: Produto = {
           id: p.id,
           nome: p.nome,
@@ -65,7 +74,10 @@ export default function ProductPage() {
 
   const handleAddToCart = async (id: number) => {
     try {
-      await api.post("/carrinhos/adicionar-item/", { produto: id, quantidade: 1 });
+      await api.post("/carrinhos/adicionar-item/", {
+        produto: id,
+        quantidade: 1,
+      });
 
       setCartItems((prev) => {
         const existingItem = prev.find((item) => item.id === id);
@@ -107,9 +119,14 @@ export default function ProductPage() {
 
   const increaseQuantity = async (id: number) => {
     try {
-      await api.post("/carrinhos/adicionar-item/", { produto: id, quantidade: 1 });
+      await api.post("/carrinhos/adicionar-item/", {
+        produto: id,
+        quantidade: 1,
+      });
       setCartItems((prev) =>
-        prev.map((i) => (i.id === id ? { ...i, quantidade: i.quantidade + 1 } : i))
+        prev.map((i) =>
+          i.id === id ? { ...i, quantidade: i.quantidade + 1 } : i
+        )
       );
     } catch (error) {
       console.error("Erro ao aumentar quantidade:", error);
@@ -124,7 +141,9 @@ export default function ProductPage() {
       setCartItems((prev) =>
         prev
           .map((i) =>
-            i.id === id && i.quantidade > 1 ? { ...i, quantidade: i.quantidade - 1 } : i
+            i.id === id && i.quantidade > 1
+              ? { ...i, quantidade: i.quantidade - 1 }
+              : i
           )
           .filter((i) => i.quantidade > 0)
       );
@@ -175,7 +194,7 @@ export default function ProductPage() {
           <div className="space-y-6">
             <div className="flex justify-between items-start">
               <h1 className="text-2xl font-bold text-gray-900 flex-1">
-                {produto.nome}
+                {capitalizeWords(produto.nome)}
               </h1>
               <button className="ml-4 p-2 hover:bg-gray-100 rounded-full">
                 <Heart className="w-6 h-6 text-gray-400" />

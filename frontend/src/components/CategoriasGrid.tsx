@@ -5,7 +5,11 @@ import { useNavigate } from "react-router-dom"
 
 // Função para deixar a primeira letra de cada palavra maiúscula
 function capitalizeWords(str: string) {
-  return str.replace(/\b\w/g, (char) => char.toUpperCase())
+  return str
+    .toLowerCase()
+    .replace(/\p{L}+/gu, (word) => 
+      word.charAt(0).toLocaleUpperCase("pt-BR") + word.slice(1)
+    )
 }
 
 export default function CategoriasGrid() {

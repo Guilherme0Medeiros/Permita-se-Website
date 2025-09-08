@@ -146,7 +146,6 @@ export default function Home() {
                   descricao={produto.descricao}
                   imagem={produto.imagem}
                   onAddToCart={handleAddToCart}
-                  onClick={() => navigate(`/produto/${produto.id}`)}
                 />
               ))}
           </div>

@@ -1,5 +1,13 @@
 import { useEffect, useState } from "react";
-import { Search, MapPin, User, Heart, ShoppingCart, Menu, Shield } from "lucide-react";
+import {
+  Search,
+  MapPin,
+  User,
+  Heart,
+  ShoppingCart,
+  Menu,
+  Shield,
+} from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
@@ -15,7 +23,7 @@ export default function PermitaSeHeader({
   setIsCartOpen: (open: boolean) => void;
 }) {
   const navigate = useNavigate();
-  const { isAdmin } = useAuth(); 
+  const { isAdmin } = useAuth();
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -33,7 +41,7 @@ export default function PermitaSeHeader({
     "macacões",
     "blusas",
     "shorts",
-    "Promoção",
+    "jaquetas",
   ];
 
   return (
@@ -82,36 +90,65 @@ export default function PermitaSeHeader({
               <span className="text-sm font-medium">Admin Produtos</span>
             </button>
           )}
-
-          <div className="relative hidden md:inline-block">
+          <div className="relative">
             <button
-              onClick={() => setShowUserMenu((prev) => !prev)}
-              className="text-white hover:bg-gray-900 p-2 rounded-md"
+              onClick={() => setShowUserMenu((prev: boolean) => !prev)}
+              className="flex items-center justify-center w-10 h-10 text-white hover:text-orange-300 hover:bg-white/10 rounded-full transition-all duration-300 group"
             >
-              <User className="h-5 w-5" />
+              <User className="h-5 w-5 group-hover:scale-110 transition-transform" />
             </button>
+
             {showUserMenu && (
-              <div className="absolute right-0 mt-2 w-32 bg-white rounded-md shadow-lg z-10">
+              <div className="absolute right-0 mt-3 w-48 bg-white rounded-xl shadow-xl border border-gray-100 z-50 overflow-hidden">
+                {/* Seta indicativa */}
+                <div className="absolute -top-2 right-4 w-4 h-4 bg-white border-l border-t border-gray-100 transform rotate-45"></div>
+
                 {isAuthenticated ? (
-                  <button
-                    onClick={() => {
-                      logout();
-                      setShowUserMenu(false);
-                    }}
-                    className="block w-full text-left px-4 py-2 text-sm text-black hover:bg-gray-100"
-                  >
-                    Logout
-                  </button>
+                  <div className="py-2">
+                    <div className="px-4 py-3 border-b border-gray-100">
+                      <p className="text-sm font-semibold text-gray-900">
+                        Minha Conta
+                      </p>
+                      <p className="text-xs text-gray-500">
+                        Bem-vindo de volta!
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => {
+                        logout();
+                        setShowUserMenu(false);
+                      }}
+                      className="w-full px-4 py-3 text-left text-sm font-medium text-gray-700 hover:text-white hover:bg-red-500 transition-all duration-300 flex items-center gap-2"
+                    >
+                      <span className="text-red-500 hover:text-white transition-colors">
+                        🚪
+                      </span>
+                      Sair da Conta
+                    </button>
+                  </div>
                 ) : (
-                  <button
-                    onClick={() => {
-                      navigate("/login");
-                      setShowUserMenu(false);
-                    }}
-                    className="block w-full text-left px-4 py-2 text-sm text-black hover:bg-gray-100"
-                  >
-                    Login
-                  </button>
+                  <div className="py-2">
+                    <div className="px-4 py-3 border-b border-gray-100">
+                      <p className="text-sm font-semibold text-gray-900">
+                        Acesse sua conta
+                      </p>
+                      <p className="text-xs text-gray-500">
+                        Entre ou crie uma conta
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => {
+                        navigate("/login");
+                        setShowUserMenu(false);
+                      }}
+                      className="w-full px-4 py-3 text-left text-sm font-medium text-gray-700 hover:text-white hover:bg-orange-500 transition-all duration-300 flex items-center gap-2"
+                    >
+                      <span className="text-orange-500 hover:text-white transition-colors">
+                        👤
+                      </span>
+                      Entrar / Cadastrar
+                    </button>
+                  </div>
                 )}
               </div>
             )}

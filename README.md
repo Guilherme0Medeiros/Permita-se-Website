@@ -1,7 +1,7 @@
 # 👕 Permita-se E-commerce
 
 O **Permita-se** é uma plataforma de e-commerce de moda desenvolvida para oferecer uma experiência moderna, intuitiva e responsiva.  
-O sistema é dividido em **frontend** (Next.js + React + Tailwind + NextUI) e **backend** (Django REST Framework), permitindo o gerenciamento completo de produtos, categorias, imagens, carrinho de compras e pedidos.
+O sistema é dividido em **frontend** ( React + Tailwind ) e **backend** (Django REST Framework), permitindo o gerenciamento completo de produtos, categorias, imagens, carrinho de compras e pedidos.
 
 ---
 
@@ -113,7 +113,7 @@ Acesse em: [http://localhost:3000](http://localhost:3000)
 
 ## 🔗 Integração com a API
 
-Certifique-se de que a API esteja rodando e atualize a variável de ambiente `NEXT_PUBLIC_API_URL` no `.env.local` com a URL correta.
+Certifique-se de que a API esteja rodando e atualize a variável de ambiente no `.env.local` com a URL correta.
 
 Exemplo de `.env.local`:
 

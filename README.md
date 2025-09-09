@@ -121,9 +121,14 @@ Exemplo de `.env.local`:
 NEXT_PUBLIC_API_URL=http://localhost:8000/api/v1/
 ```
 
----
-
 ## 🧪 Testes
 
 - **Backend:** utilize Swagger, Postman ou Insomnia para testar os endpoints.
 - **Frontend:** teste os fluxos de compra, autenticação e carrinho.
+## IMAGENS 
+<img width="1325" height="652" alt="Exemplo1" src="https://github.com/user-attachments/assets/45518942-d035-425e-ab32-84185d360ce9" />
+<img width="1325" height="652" alt="exemplo2" src="https://github.com/user-attachments/assets/4beede61-5946-47ff-8277-ce2d3c98226a" />
+<img width="1325" height="652" alt="Opera Instantâneo_2025-09-08_215454_localhost" src="https://github.com/user-attachments/assets/1e727927-4e0b-4c5e-993f-da3944b86610" />
+<img width="1325" height="652" alt="Opera Instantâneo_2025-09-08_215411_localhost" src="https://github.com/user-attachments/assets/3e061517-4ca5-43a6-adca-4a5e63e9c560" />
+
+ 

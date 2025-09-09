@@ -26,9 +26,9 @@ O sistema é dividido em **frontend** (Next.js + React + Tailwind + NextUI) e **
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)   
 ![Django](https://img.shields.io/badge/Django-092E20?style=for-the-badge&logo=django&logoColor=green)  
 
-- Next.js + React
+- React
 - TypeScript
-- Tailwind CSS + NextUI
+- Tailwind CSS 
 - Django REST Framework
 
 ---

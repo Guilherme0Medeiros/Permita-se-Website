@@ -21,13 +21,10 @@ O sistema é dividido em **frontend** (Next.js + React + Tailwind + NextUI) e **
 
 ## 🛠️ Tecnologias utilizadas
 
-![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)  
 ![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)  
 ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)  
-![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)  
-![NextUI](https://img.shields.io/badge/NextUI-000000?style=for-the-badge&logo=vercel&logoColor=white)  
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)   
 ![Django](https://img.shields.io/badge/Django-092E20?style=for-the-badge&logo=django&logoColor=green)  
-![DRF](https://img.shields.io/badge/DRF-092E20?style=for-the-badge&logo=django&logoColor=red)
 
 - Next.js + React
 - TypeScript

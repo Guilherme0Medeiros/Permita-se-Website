@@ -74,9 +74,6 @@ Permita-se/
 ## ⚙️ Como rodar o projeto
 
 ```bash
-# Configure e rode o backend
-cd backend
-
 # Crie e ative o ambiente virtual (venv)
 # No Windows
 python -m venv venv
@@ -85,6 +82,9 @@ venv\Scripts\activate
 # No Linux/macOS
 python3 -m venv venv
 source venv/bin/activate
+
+# Configure e rode o backend
+cd backend
 
 # Instale as dependências do backend
 pip install -r requirements.txt

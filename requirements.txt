@@ -10,14 +10,12 @@ inflection==0.5.1
 jsonschema==4.23.0
 jsonschema-specifications==2024.10.1
 packaging==24.2
-psycopg==3.2.6
-psycopg-binary==3.2.6
+psycopg
 PyJWT==2.9.0
 python-dotenv==1.1.0
 pytz==2025.2
 PyYAML==6.0.2
 referencing==0.36.2
-rpds-py==0.24.0
 sqlparse==0.5.3
 tzdata==2025.2
 uritemplate==4.1.1

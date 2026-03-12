@@ -4,7 +4,7 @@ import { MessageCircle } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 import { motion } from "framer-motion"
 
-// Função para deixar a primeira letra de cada palavra maiúscula
+// capitalize the first letter of each word.
 function capitalizeWords(str: string) {
   return str
     .toLowerCase()
@@ -74,7 +74,7 @@ export default function CategoriasGrid() {
   ]
 
   return (
-    <section className="relative py-16 sm:py-24 px-4 sm:px-6 lg:px-8 bg-surface-dark">
+    <section className="relative py-16 sm:py-24 px-4 sm:px-6 lg:px-8 bg-surface-dark text-surface-dark-foreground">
       <div className="max-w-7xl mx-auto">
         <motion.div
           className="text-center mb-12"
@@ -83,10 +83,11 @@ export default function CategoriasGrid() {
           viewport={{ once: true }}
           transition={{ type: "spring", stiffness: 100, damping: 20 }}
         >
-          <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-extrabold text-primary-foreground uppercase tracking-tighter">
+          <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-extrabold text-surface-dark-foreground uppercase tracking-tighter">
             Até 50% de Desconto nas Peças
           </h2>
-          <p className="mt-4 text-primary-foreground/70 text-lg max-w-2xl mx-auto">
+
+          <p className="mt-4 text-surface-dark-foreground/70 text-lg max-w-2xl mx-auto">
             Aproveite as últimas unidades com descontos incríveis!
           </p>
         </motion.div>
@@ -107,12 +108,12 @@ export default function CategoriasGrid() {
               onClick={() => navigate(`/categoria/${categoria.nome}`)}
             >
               <div className="relative w-28 h-28 sm:w-36 sm:h-36 md:w-40 md:h-40 rounded-full overflow-hidden ring-4 ring-orange-400 shadow-md group-hover:ring-orange-500 group-hover:shadow-xl transition-all duration-500">
-
                 <img
                   src={categoria.imagem || "/placeholder.svg"}
                   alt={categoria.nome}
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                 />
+
                 <div className="absolute inset-0 bg-foreground/30 group-hover:bg-foreground/10 transition-colors duration-300 flex items-center justify-center">
                   <span className="text-white text-sm sm:text-base font-bold opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-center px-2">
                     {capitalizeWords(categoria.nome)}
@@ -120,7 +121,7 @@ export default function CategoriasGrid() {
                 </div>
               </div>
 
-              <h3 className="mt-4 text-primary-foreground text-sm sm:text-base font-bold uppercase tracking-wide text-center">
+              <h3 className="mt-4 text-surface-dark-foreground text-sm sm:text-base font-bold uppercase tracking-wide text-center">
                 {categoria.titulo}
               </h3>
             </motion.div>
@@ -128,12 +129,7 @@ export default function CategoriasGrid() {
         </motion.div>
       </div>
 
-      {/* Botão WhatsApp */}
-      <div className="fixed bottom-6 right-6 z-50">
-        <button className="bg-green-500 hover:bg-green-600 text-white p-3 rounded-full shadow-lg transition-colors duration-300">
-          <MessageCircle size={24} />
-        </button>
-      </div>
+      
     </section>
   )
 }

@@ -1,6 +1,7 @@
 "use client";
 import { useRef, useState, useEffect } from "react";
 import { ProductCard } from "../components/ProductCard";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 interface Produto {
   id: number;
@@ -23,6 +24,9 @@ export default function ProductCarousel({
   const [currentPage, setCurrentPage] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [produtosPorPagina, setProdutosPorPagina] = useState(4);
+  const [touchStart, setTouchStart] = useState<number | null>(null)
+  const [touchEnd, setTouchEnd] = useState<number | null>(null)
+  const minSwipeDistance = 50
 
   useEffect(() => {
     const handleResize = () => {
@@ -52,7 +56,31 @@ export default function ProductCarousel({
         : Math.max(currentPage - 1, 0);
     setCurrentPage(nextPage);
   };
+   
+  /* Swipe mobile */
 
+const onTouchStart = (e: React.TouchEvent) => {
+  setTouchEnd(null)
+  setTouchStart(e.targetTouches[0].clientX)
+}
+
+const onTouchMove = (e: React.TouchEvent) => {
+  setTouchEnd(e.targetTouches[0].clientX)
+}
+
+const onTouchEnd = () => {
+  if (!touchStart || !touchEnd) return
+
+  const distance = touchStart - touchEnd
+
+  if (distance > minSwipeDistance) {
+    scroll("right")
+  }
+
+  if (distance < -minSwipeDistance) {
+    scroll("left")
+  }
+}
   const goToPage = (page: number) => {
     if (page < 0 || page >= totalPages) return;
     setCurrentPage(page);
@@ -77,31 +105,36 @@ export default function ProductCarousel({
 
   return (
     <div className="p-6 w-full max-w-[1400px] mx-auto">
-      <div className="relative">
-        {/* Botão esquerdo (somente seta grande laranja) */}
+      <div className="relative group">
+        {/* left button ) */}
         <button
-          className="absolute z-10 left-0 top-1/2 -translate-y-1/2 text-orange-500 hover:text-orange-600 transition disabled:opacity-30"
-          style={{ left: "-24px", fontSize: "60px", lineHeight: "1" }}
-          onClick={() => scroll("left")}
-          aria-label="Voltar"
-          disabled={currentPage === 0}
-        >
-          &#x2039;
-        </button>
+  onClick={() => scroll("left")}
+  aria-label="Voltar"
+  disabled={currentPage === 0}
+  className="absolute left-4 sm:left-6 top-1/2 -translate-y-1/2 z-20 bg-white/70 hover:bg-white/90 backdrop-blur-md backdrop-blur-sm text-foreground p-2 sm:p-3 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 disabled:opacity-30"
+>
+  <ChevronLeft className="h-5 w-5 sm:h-6 sm:w-6" />
+</button>
 
-        {/* Botão direito (somente seta grande laranja) */}
-        <button
-          className="absolute z-10 right-0 top-1/2 -translate-y-1/2 text-orange-500 hover:text-orange-600 transition disabled:opacity-30"
-          style={{ right: "-24px", fontSize: "60px", lineHeight: "1" }}
-          onClick={() => scroll("right")}
-          aria-label="Avançar"
-          disabled={(currentPage + 1) * produtosPorPagina >= produtos.length}
-        >
-          &#x203A;
-        </button>
+        {/* right button ) */}
+       <button
+  onClick={() => scroll("right")}
+  aria-label="Avançar"
+  disabled={(currentPage + 1) * produtosPorPagina >= produtos.length}
+  className="absolute right-4 sm:right-6 top-1/2 -translate-y-1/2 z-20 bg-white/70 hover:bg-white/90 backdrop-blur-md backdrop-blur-sm text-foreground p-2 sm:p-3 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 disabled:opacity-30"
+>
+  <ChevronRight className="h-5 w-5 sm:h-6 sm:w-6" />
+</button>
+
 
         {/* Carrossel */}
-        <div ref={carouselRef} className="flex overflow-hidden">
+        <div
+  ref={carouselRef}
+  className="flex overflow-hidden"
+  onTouchStart={onTouchStart}
+  onTouchMove={onTouchMove}
+  onTouchEnd={onTouchEnd}
+>
           <div
             data-carousel-inner
             className="flex gap-6 transition-transform duration-700 ease-in-out"
@@ -137,9 +170,11 @@ export default function ProductCarousel({
           {Array.from({ length: totalPages }).map((_, index) => (
             <button
               key={index}
-              className={`w-8 h-1 rounded-sm transition-colors duration-300 ${
-                index === currentPage ? "bg-orange-500" : "bg-gray-300 hover:bg-gray-400"
-              }`}
+              className={`h-1.5 rounded-full transition-all duration-500 ${
+  index === currentPage
+    ? "w-8 bg-primary"
+    : "w-3 bg-foreground/30 hover:bg-foreground/50"
+}`}
               onClick={() => goToPage(index)}
               aria-label={`Ir para a página ${index + 1}`}
               disabled={isTransitioning}

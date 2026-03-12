@@ -225,11 +225,10 @@ export default function Home() {
                 Navegue pelas nossas categorias e descubra peças perfeitas para cada ocasião
               </p>
             </motion.div>
-
-            <CategoriasGrid />
           </div>
+          
         </section>
-
+         <CategoriasGrid />
         {/* Carrossel com os produtos */}
         <section className="py-16 sm:py-24 px-4 sm:px-6 lg:px-8 bg-muted/50 overflow-hidden">
           <div className="max-w-7xl mx-auto">

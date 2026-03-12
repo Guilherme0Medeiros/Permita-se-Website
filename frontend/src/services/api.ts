@@ -4,15 +4,18 @@ const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
 });
 
+// attach access token to requests
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem("accessToken");
+
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
+
   return config;
 });
 
-// REFRESH AUTOMÁTICO
+// refresh control
 let isRefreshing = false;
 let failedQueue: any[] = [];
 
@@ -21,14 +24,18 @@ const processQueue = (error: any, token: string | null = null) => {
     if (error) prom.reject(error);
     else prom.resolve(token);
   });
+
   failedQueue = [];
 };
 
+// response interceptor
 api.interceptors.response.use(
   (response) => response,
+
   async (error) => {
     const originalRequest = error.config;
 
+    
     if (
       error.response?.status === 401 &&
       !originalRequest._retry &&
@@ -36,6 +43,7 @@ api.interceptors.response.use(
     ) {
       originalRequest._retry = true;
 
+      
       if (isRefreshing) {
         return new Promise(function (resolve, reject) {
           failedQueue.push({ resolve, reject });
@@ -51,21 +59,30 @@ api.interceptors.response.use(
 
       try {
         const refreshToken = localStorage.getItem("refreshToken");
+
+        // request new access token
         const response = await api.post("/token/refresh/", {
           refresh: refreshToken,
         });
 
         const newAccessToken = response.data.access;
+
         localStorage.setItem("accessToken", newAccessToken);
+
         processQueue(null, newAccessToken);
 
         originalRequest.headers["Authorization"] = "Bearer " + newAccessToken;
+
         return api(originalRequest);
       } catch (err) {
+        // refresh failed , logout
         processQueue(err, null);
+
         localStorage.removeItem("accessToken");
         localStorage.removeItem("refreshToken");
+
         window.location.href = "/login";
+
         return Promise.reject(err);
       } finally {
         isRefreshing = false;

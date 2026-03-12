@@ -157,7 +157,6 @@ export default function Home() {
       <main>
         <BannerCarousel />
 
-        {/* Produtos em destaque */}
         <motion.section
           className="py-16 sm:py-24 px-4 sm:px-6 lg:px-8"
           initial="hidden"
@@ -203,7 +202,7 @@ export default function Home() {
           </div>
         </motion.section>
 
-        {/* Categorias */}
+        {/* categories */}
         <section className="py-16 sm:py-24 px-4 sm:px-6 lg:px-8">
           <div className="max-w-7xl mx-auto">
             <motion.div
@@ -229,7 +228,7 @@ export default function Home() {
           
         </section>
          <CategoriasGrid />
-        {/* Carrossel com os produtos */}
+        {/* product carousel */}
         <section className="py-16 sm:py-24 px-4 sm:px-6 lg:px-8 bg-muted/50 overflow-hidden">
           <div className="max-w-7xl mx-auto">
             <motion.div

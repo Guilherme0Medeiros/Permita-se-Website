@@ -73,7 +73,7 @@ export default function Home() {
         const existingItem = prev.find((item) => item.id === id)
         if (existingItem) {
           return prev.map((item) =>
-            item.id === id ? { ...item, quantidade: item.quantidade + 1 } : item
+            item.id === id ? { ...item, quantidade: item.quantidade + 1 } : item,
           )
         }
 
@@ -110,8 +110,8 @@ export default function Home() {
 
       setCartItems((prev) =>
         prev.map((item) =>
-          item.id === id ? { ...item, quantidade: item.quantidade + 1 } : item
-        )
+          item.id === id ? { ...item, quantidade: item.quantidade + 1 } : item,
+        ),
       )
     } catch (error) {
       console.error("Erro ao aumentar quantidade:", error)
@@ -132,9 +132,9 @@ export default function Home() {
           .map((item) =>
             item.id === id && item.quantidade > 1
               ? { ...item, quantidade: item.quantidade - 1 }
-              : item
+              : item,
           )
-          .filter((item) => item.quantidade > 0)
+          .filter((item) => item.quantidade > 0),
       )
     } catch (error) {
       console.error("Erro ao diminuir quantidade:", error)
@@ -144,6 +144,8 @@ export default function Home() {
   const handleCheckout = () => {
     navigate("/checkout", { state: { cartItems } })
   }
+
+  const produtosEmPromocao = produtos.filter((produto) => produto.em_promocao === true)
 
   return (
     <div className="flex flex-col min-h-screen bg-background text-foreground">
@@ -165,7 +167,13 @@ export default function Home() {
           variants={containerVariants}
         >
           <div className="max-w-7xl mx-auto">
-            <motion.div variants={itemVariants} className="text-center mb-12">
+            <motion.div
+              className="text-center mb-12"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{ type: "spring", stiffness: 100, damping: 20 }}
+            >
               <span className="inline-block bg-primary/10 text-primary text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full mb-4">
                 Em Destaque
               </span>
@@ -179,13 +187,16 @@ export default function Home() {
               </p>
             </motion.div>
 
-            <motion.div
-              variants={containerVariants}
-              className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6"
-            >
-              {produtos
-                .filter((produto) => produto.em_promocao === true)
-                .map((produto) => (
+            {produtosEmPromocao.length > 0 && (
+              <motion.div
+                key={produtosEmPromocao.length}
+                variants={containerVariants}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, amount: 0.1 }}
+                className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6"
+              >
+                {produtosEmPromocao.map((produto) => (
                   <motion.div key={produto.id} variants={itemVariants}>
                     <ProductCard
                       id={produto.id}
@@ -198,11 +209,11 @@ export default function Home() {
                     />
                   </motion.div>
                 ))}
-            </motion.div>
+              </motion.div>
+            )}
           </div>
         </motion.section>
 
-        {/* categories */}
         <section className="py-16 sm:py-24 px-4 sm:px-6 lg:px-8">
           <div className="max-w-7xl mx-auto">
             <motion.div
@@ -225,11 +236,11 @@ export default function Home() {
               </p>
             </motion.div>
           </div>
-          
         </section>
-         <CategoriasGrid />
-        {/* product carousel */}
-        <section className="py-16 sm:py-24 px-4 sm:px-6 lg:px-8 bg-muted/50 overflow-hidden">
+
+        <CategoriasGrid />
+
+        <section className="py-16 sm:py-24 px-4 sm:px-6 lg:px-8 bg-muted/50">
           <div className="max-w-7xl mx-auto">
             <motion.div
               className="text-center mb-12"
@@ -251,10 +262,10 @@ export default function Home() {
               produtos={produtos}
               onAddToCart={handleAddToCart}
               onClickCard={(id) => navigate(`/produto/${id}`)}
-              
             />
           </div>
         </section>
+
         <Footer />
       </main>
 

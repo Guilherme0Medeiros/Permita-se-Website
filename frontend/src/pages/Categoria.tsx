@@ -131,7 +131,7 @@ export default function Categoria() {
 
   return (
     <main className="min-h-screen bg-white text-gray-900 relative">
-      {/* Navbar */}
+      
       <Navbar
         isAuthenticated={isAuthenticated}
         logout={logout}
@@ -139,13 +139,13 @@ export default function Categoria() {
         setIsCartOpen={setIsCartOpen}
       />
 
-      {/* Título da Categoria */}
+      
       <section className="p-6 max-w-7xl mx-auto">
         <h2 className="text-3xl font-semibold mb-6 capitalize">
           Categoria: {nome}
         </h2>
 
-        {/* Grid de Produtos */}
+        
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {produtos.length === 0 ? (
             <p className="text-gray-500">Nenhum produto encontrado.</p>
@@ -165,7 +165,7 @@ export default function Categoria() {
         </div>
       </section>
 
-      {/* Sidebar do carrinho */}
+      
       <CartSidebar
         isOpen={isCartOpen}
         onClose={() => setIsCartOpen(false)}

@@ -19,7 +19,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   });
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
 
-  // aplica/remover Authorization no axios quando mudar autenticação
+  // apply remove authorization in axios when authentication changes
   useEffect(() => {
     const token = localStorage.getItem("accessToken");
     if (token) {
@@ -29,7 +29,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [isAuthenticated]);
 
-  // busca /me quando autenticado para descobrir se é admin
+  // search /me when authenticated to find out if it's admin
   useEffect(() => {
     if (!isAuthenticated) {
       setIsAdmin(false);
@@ -49,7 +49,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const login = (access: string, refresh: string) => {
     localStorage.setItem("accessToken", access);
     localStorage.setItem("refreshToken", refresh);
-    // garante header imediatamente
     api.defaults.headers.common["Authorization"] = `Bearer ${access}`;
     setIsAuthenticated(true);
     navigate("/");

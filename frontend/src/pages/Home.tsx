@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
+import { motion } from "framer-motion"
 import { useAuth } from "../context/AuthContext"
 import { ProductCard } from "../components/ProductCard"
 import BannerCarousel from "../components/BannerCarousel"
@@ -9,6 +10,7 @@ import CartSidebar from "../components/CartSidebar"
 import ProductCarousel from "../components/ProductCarousel"
 import CategoriasGrid from "../components/CategoriasGrid"
 import Navbar from "../components/Navbar"
+import Footer from "../components/Footer"
 import api from "../services/api"
 
 interface Produto {
@@ -19,6 +21,20 @@ interface Produto {
   imagem: string
   quantidade: number
   em_promocao: boolean
+}
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { staggerChildren: 0.08 } },
+}
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 24 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { type: "spring" as const, stiffness: 100, damping: 20 },
+  },
 }
 
 export default function Home() {
@@ -52,29 +68,33 @@ export default function Home() {
         produto: id,
         quantidade: 1,
       })
+
       setCartItems((prev) => {
         const existingItem = prev.find((item) => item.id === id)
         if (existingItem) {
-          return prev.map((item) => (item.id === id ? { ...item, quantidade: item.quantidade + 1 } : item))
-        } else {
-          return [...prev, { ...produto, quantidade: 1 }]
+          return prev.map((item) =>
+            item.id === id ? { ...item, quantidade: item.quantidade + 1 } : item
+          )
         }
+
+        return [...prev, { ...produto, quantidade: 1 }]
       })
+
       setIsCartOpen(true)
     } catch (error) {
       console.error("Erro ao adicionar item no carrinho:", error)
     }
   }
 
-  
-
   const handleRemoveAllItem = async (id: number) => {
     try {
       const item = cartItems.find((item) => item.id === id)
       if (!item) return
+
       await api.delete("/carrinhos/remover-item/", {
         data: { produto: id, quantidade: item.quantidade },
       })
+
       setCartItems((prev) => prev.filter((item) => item.id !== id))
     } catch (error) {
       console.error("Erro ao remover todo o item do carrinho:", error)
@@ -87,7 +107,12 @@ export default function Home() {
         produto: id,
         quantidade: 1,
       })
-      setCartItems((prev) => prev.map((item) => (item.id === id ? { ...item, quantidade: item.quantidade + 1 } : item)))
+
+      setCartItems((prev) =>
+        prev.map((item) =>
+          item.id === id ? { ...item, quantidade: item.quantidade + 1 } : item
+        )
+      )
     } catch (error) {
       console.error("Erro ao aumentar quantidade:", error)
     }
@@ -101,10 +126,15 @@ export default function Home() {
           quantidade: 1,
         },
       })
+
       setCartItems((prev) =>
         prev
-          .map((item) => (item.id === id && item.quantidade > 1 ? { ...item, quantidade: item.quantidade - 1 } : item))
-          .filter((item) => item.quantidade > 0),
+          .map((item) =>
+            item.id === id && item.quantidade > 1
+              ? { ...item, quantidade: item.quantidade - 1 }
+              : item
+          )
+          .filter((item) => item.quantidade > 0)
       )
     } catch (error) {
       console.error("Erro ao diminuir quantidade:", error)
@@ -116,154 +146,120 @@ export default function Home() {
   }
 
   return (
-    <main className="min-h-screen bg-gray-50 text-gray-900 relative font-sans antialiased">
-      {/* Navbar */}
-      <Navbar isAuthenticated={isAuthenticated} logout={logout} cartItems={cartItems} setIsCartOpen={setIsCartOpen} />
+    <div className="flex flex-col min-h-screen bg-background text-foreground">
+      <Navbar
+        isAuthenticated={isAuthenticated}
+        logout={logout}
+        cartItems={cartItems}
+        setIsCartOpen={setIsCartOpen}
+      />
 
-      {/* Carrossel */}
-      <BannerCarousel />
+      <main>
+        <BannerCarousel />
 
-      {/* Produtos em destaque */}
-      <section className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center mb-12">
-            
-            <h2 className="text-4xl md:text-5xl font-black text-gray-900 mb-4 tracking-tight">Peças Mais Amadas</h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto font-light">
-              Selecionamos especialmente para você as peças que estão fazendo sucesso
-            </p>
+        {/* Produtos em destaque */}
+        <motion.section
+          className="py-16 sm:py-24 px-4 sm:px-6 lg:px-8"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.15 }}
+          variants={containerVariants}
+        >
+          <div className="max-w-7xl mx-auto">
+            <motion.div variants={itemVariants} className="text-center mb-12">
+              <span className="inline-block bg-primary/10 text-primary text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full mb-4">
+                Em Destaque
+              </span>
+
+              <h2 className="section-title text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-foreground">
+                Peças Mais Amadas
+              </h2>
+
+              <p className="section-subtitle mt-4 text-lg max-w-2xl mx-auto">
+                Selecionamos especialmente para você as peças que estão fazendo sucesso
+              </p>
+            </motion.div>
+
+            <motion.div
+              variants={containerVariants}
+              className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6"
+            >
+              {produtos
+                .filter((produto) => produto.em_promocao === true)
+                .map((produto) => (
+                  <motion.div key={produto.id} variants={itemVariants}>
+                    <ProductCard
+                      id={produto.id}
+                      nome={produto.nome}
+                      preco={produto.preco}
+                      descricao={produto.descricao}
+                      imagem={produto.imagem}
+                      em_promocao={produto.em_promocao}
+                      onAddToCart={handleAddToCart}
+                    />
+                  </motion.div>
+                ))}
+            </motion.div>
           </div>
+        </motion.section>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-            {produtos
-              .filter((produto) => produto.em_promocao === true)
-              .map((produto) => (
-                <ProductCard
-                  key={produto.id}
-                  id={produto.id}
-                  nome={produto.nome}
-                  preco={produto.preco}
-                  descricao={produto.descricao}
-                  imagem={produto.imagem}
-                  onAddToCart={handleAddToCart}
-                />
-              ))}
+        {/* Categorias */}
+        <section className="py-16 sm:py-24 px-4 sm:px-6 lg:px-8">
+          <div className="max-w-7xl mx-auto">
+            <motion.div
+              className="text-center mb-12"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ type: "spring", stiffness: 100, damping: 20 }}
+            >
+              <span className="inline-block bg-primary/10 text-primary text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full mb-4">
+                Categorias
+              </span>
+
+              <h2 className="section-title text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-foreground">
+                Encontre Seu Estilo
+              </h2>
+
+              <p className="section-subtitle mt-4 text-lg max-w-2xl mx-auto">
+                Navegue pelas nossas categorias e descubra peças perfeitas para cada ocasião
+              </p>
+            </motion.div>
+
+            <CategoriasGrid />
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Categorias */}
-      <section className="py-16 bg-gradient-to-br from-orange-50 to-orange-100">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center mb-12">
-            
-            <h2 className="text-4xl md:text-5xl font-black text-gray-900 mb-4 tracking-tight">Encontre Seu Estilo</h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto font-light">
-              Navegue pelas nossas categorias e descubra peças perfeitas para cada ocasião
-            </p>
+        {/* Carrossel com os produtos */}
+        <section className="py-16 sm:py-24 px-4 sm:px-6 lg:px-8 bg-muted/50 overflow-hidden">
+          <div className="max-w-7xl mx-auto">
+            <motion.div
+              className="text-center mb-12"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ type: "spring", stiffness: 100, damping: 20 }}
+            >
+              <h2 className="section-title text-3xl sm:text-4xl md:text-5xl text-foreground">
+                Talvez Você Também Goste
+              </h2>
+
+              <p className="section-subtitle mt-4 text-lg">
+                Seleções personalizadas baseadas no seu gosto
+              </p>
+            </motion.div>
+
+            <ProductCarousel
+              produtos={produtos}
+              onAddToCart={handleAddToCart}
+              onClickCard={(id) => navigate(`/produto/${id}`)}
+              
+            />
           </div>
-          <CategoriasGrid />
-        </div>
-      </section>
+        </section>
+        <Footer />
+      </main>
 
-      {/* Carrossel com os produtos */}
-      <section className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="mb-12">
-            <h2 className="text-3xl md:text-4xl font-black text-gray-900 mb-2 tracking-tight">
-              Talvez você também goste
-            </h2>
-            <p className="text-lg text-gray-600 font-light">Seleções personalizadas baseadas no seu gosto</p>
-          </div>
-          <ProductCarousel
-            produtos={produtos}
-            onAddToCart={handleAddToCart}
-            onClickCard={(id) => navigate(`/produto/${id}`)}
-          />
-        </div>
-      </section>
-
-      {/* Informações de Contato */}
-      <section className="py-16 bg-gray-900 text-white">
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-black mb-4 tracking-tight">Fique Conectado</h2>
-            <p className="text-xl text-gray-300 font-light">
-              Siga-nos nas redes sociais e fique por dentro de todas as novidades
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Instagram */}
-            <div className="text-center p-6 bg-gray-800 rounded-2xl hover:bg-gray-700 transition-colors">
-              <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl">📷</span>
-              </div>
-              <h3 className="text-xl font-bold mb-2">Instagram</h3>
-              <p className="text-gray-300 mb-4">Acompanhe nossos looks do dia e inspirações de moda</p>
-              <a
-                href="#"
-                className="inline-block bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-full font-semibold transition-colors"
-              >
-                @permitase
-              </a>
-            </div>
-
-            {/* WhatsApp */}
-            <div className="text-center p-6 bg-gray-800 rounded-2xl hover:bg-gray-700 transition-colors">
-              <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl">💬</span>
-              </div>
-              <h3 className="text-xl font-bold mb-2">WhatsApp</h3>
-              <p className="text-gray-300 mb-4">Tire suas dúvidas e receba atendimento personalizado</p>
-              <a
-                href="#"
-                className="inline-block bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-full font-semibold transition-colors"
-              >
-                Falar Conosco
-              </a>
-            </div>
-
-            {/* Email */}
-            <div className="text-center p-6 bg-gray-800 rounded-2xl hover:bg-gray-700 transition-colors">
-              <div className="w-16 h-16 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl">✉️</span>
-              </div>
-              <h3 className="text-xl font-bold mb-2">E-mail</h3>
-              <p className="text-gray-300 mb-4">Entre em contato para parcerias e colaborações</p>
-              <a
-                href="mailto:contato@permitase.com"
-                className="inline-block bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-full font-semibold transition-colors"
-              >
-                Enviar E-mail
-              </a>
-            </div>
-          </div>
-
-          {/* Informações adicionais */}
-          <div className="mt-12 pt-8 border-t border-gray-700 text-center">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm text-gray-400">
-              <div>
-                <h4 className="font-semibold text-white mb-2">Horário de Atendimento</h4>
-                <p>Segunda a Sexta: 9h às 18h</p>
-                <p>Sábado: 9h às 14h</p>
-              </div>
-              <div>
-                <h4 className="font-semibold text-white mb-2">Entrega</h4>
-                <p>Frete grátis acima de R$ 199</p>
-                <p>Entrega em todo o Brasil</p>
-              </div>
-              <div>
-                <h4 className="font-semibold text-white mb-2">Troca e Devolução</h4>
-                <p>30 dias para trocas</p>
-                <p>Primeira troca grátis</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Sidebar do carrinho */}
       <CartSidebar
         isOpen={isCartOpen}
         onClose={() => setIsCartOpen(false)}
@@ -273,6 +269,6 @@ export default function Home() {
         onDecrease={decreaseQuantity}
         onCheckout={handleCheckout}
       />
-    </main>
+    </div>
   )
 }

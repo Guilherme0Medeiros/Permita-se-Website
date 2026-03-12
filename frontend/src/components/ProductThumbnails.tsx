@@ -14,7 +14,7 @@ export default function ProductThumbnails({
   if (!images || images.length === 0) return null;
 
   return (
-    <div className="flex flex-col space-y-2 max-h-96 overflow-y-auto pr-1">
+    <div className="flex flex-col space-y-2 max-h-96 overflow-hidden pr-1">
       {images.map((image, index) => (
         <button
           key={index}

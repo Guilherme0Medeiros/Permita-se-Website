@@ -12,9 +12,10 @@ interface ProductCardProps {
   onAddToCart: (id: number) => void
   imagem?: string
   em_promocao?: boolean
+  onClick?: () => void
 }
 
-// Função para deixar a primeira letra de cada palavra maiúscula
+// capitalize the first letter of each word
 function capitalizeWords(str: string) {
   return str
     .toLowerCase()

@@ -1,75 +1,150 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const banners = [
-  "img/banner1.png",
-  "img/banner2.png",
-   "https://tfcprw.vtexassets.com/assets/vtex.file-manager-graphql/images/e68101bb-ddc3-47ea-88ec-9c73db561cff___992e3d61e2f9ddedb91663b083c35165.jpg",
+  {
+    image: "https://images.unsplash.com/photo-1556906781-9a412961c28c?w=1600&q=80",
+    title: "Nova Coleção",
+    subtitle: "Chegou a coleção que vai transformar seu guarda-roupa",
+    cta: "Ver Coleção",
+  },
+  {
+    image: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1600&q=80",
+    title: "Até 50% Off",
+    subtitle: "Promoções imperdíveis em peças selecionadas",
+    cta: "Aproveitar",
+  },
+  {
+    image: "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=1600&q=80",
+    title: "Edição Limitada",
+    subtitle: "Peças exclusivas que você não encontra em outro lugar",
+    cta: "Explorar",
+  },
 ];
 
-// Autoplay pra trocar as imagens automaticamente
-// O UseEffect é chamado quando o componente é montado e quando currentIndex muda
-export default function BannerCarousel() {
-  const [currentIndex, setCurrentIndex] = useState(0);
+const spring = { type: "spring" as const, stiffness: 300, damping: 30 };
+
+export default function HeroBanner() {
+  const [current, setCurrent] = useState(0);
+  const [direction, setDirection] = useState(1);
+
+  const goTo = useCallback((index: number) => {
+    setDirection(index > current ? 1 : -1);
+    setCurrent(index);
+  }, [current]);
+
+  const next = useCallback(() => {
+    setDirection(1);
+    setCurrent((p) => (p + 1) % banners.length);
+  }, []);
+
+  const prev = useCallback(() => {
+    setDirection(-1);
+    setCurrent((p) => (p === 0 ? banners.length - 1 : p - 1));
+  }, []);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % banners.length);
-    }, 4000);
-    // limpa o intervalo antigo de tempo quando muda a imagem
+    const interval = setInterval(next, 5000);
     return () => clearInterval(interval);
-  }, [currentIndex]); // roda toda vez que currentIndex mudar
+  }, [next]);
 
-  const prevSlide = () => {
-    setCurrentIndex((prev) => (prev === 0 ? banners.length - 1 : prev - 1));
-  };
-
-  const nextSlide = () => {
-    setCurrentIndex((prev) => (prev + 1) % banners.length);
+  const variants = {
+    enter: (d: number) => ({ x: d > 0 ? "100%" : "-100%", opacity: 0 }),
+    center: { x: 0, opacity: 1 },
+    exit: (d: number) => ({ x: d > 0 ? "-100%" : "100%", opacity: 0 }),
   };
 
   return (
-    <div className="relative w-full h-[300px] md:h-[400px] lg:h-[400px] overflow-hidden group">
-      {/* Imagens */}
-      <div className="w-full h-full relative z-0">
-        {banners.map((src, index) => (
+    <section className="relative w-full h-[60vh] sm:h-[70vh] lg:h-[80vh] overflow-hidden bg-surface-dark group">
+      <AnimatePresence initial={false} custom={direction} mode="popLayout">
+        <motion.div
+          key={current}
+          custom={direction}
+          variants={variants}
+          initial="enter"
+          animate="center"
+          exit="exit"
+          transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
+          className="absolute inset-0"
+        >
           <img
-            key={index}
-            src={src}
-            alt={`Banner ${index + 1}`}
-            className={`absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-1000 ${
-              index === currentIndex ? "opacity-100 z-10" : "opacity-0 z-0"
+            src={banners[current].image}
+            alt={banners[current].title}
+            className="w-full h-full object-cover"
+          />
+          {/* Gradient overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-surface-dark/80 via-surface-dark/20 to-transparent" />
+
+          {/* Content */}
+          <div className="absolute inset-0 flex items-end pb-16 sm:pb-24 px-6 sm:px-12 lg:px-20">
+            <div className="max-w-7xl mx-auto w-full">
+              <motion.span
+                className="inline-block bg-primary text-primary-foreground text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full mb-4"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3, ...spring }}
+              >
+                Destaque
+              </motion.span>
+              <motion.h1
+                className="font-display text-4xl sm:text-5xl md:text-7xl font-extrabold text-surface-dark-foreground uppercase tracking-tighter leading-none mb-3"
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4, ...spring }}
+                style={{ textWrap: "balance" }}
+              >
+                {banners[current].title}
+              </motion.h1>
+              <motion.p
+                className="text-surface-dark-foreground/80 text-lg sm:text-xl max-w-lg mb-6"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5, ...spring }}
+              >
+                {banners[current].subtitle}
+              </motion.p>
+              <motion.button
+                className="bg-primary text-primary-foreground font-bold px-8 py-3.5 rounded-full text-sm uppercase tracking-wide"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.6, ...spring }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                {banners[current].cta}
+              </motion.button>
+            </div>
+          </div>
+        </motion.div>
+      </AnimatePresence>
+
+      {/* Navigation arrows */}
+      <button
+        onClick={prev}
+        className="absolute left-4 sm:left-8 top-1/2 -translate-y-1/2 z-20 bg-surface-dark-foreground/10 hover:bg-surface-dark-foreground/20 backdrop-blur-sm text-surface-dark-foreground p-2 sm:p-3 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+      >
+        <ChevronLeft className="h-5 w-5 sm:h-6 sm:w-6" />
+      </button>
+      <button
+        onClick={next}
+        className="absolute right-4 sm:right-8 top-1/2 -translate-y-1/2 z-20 bg-surface-dark-foreground/10 hover:bg-surface-dark-foreground/20 backdrop-blur-sm text-surface-dark-foreground p-2 sm:p-3 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+      >
+        <ChevronRight className="h-5 w-5 sm:h-6 sm:w-6" />
+      </button>
+
+      {/* Dots */}
+      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex gap-2">
+        {banners.map((_, i) => (
+          <button
+            key={i}
+            onClick={() => goTo(i)}
+            className={`h-1.5 rounded-full transition-all duration-500 ${
+              i === current ? "w-8 bg-primary" : "w-3 bg-surface-dark-foreground/40 hover:bg-surface-dark-foreground/60"
             }`}
           />
         ))}
       </div>
-
-      {/* Botões */}
-      <div className="absolute top-0 left-0 w-full h-full flex items-center justify-between px-4 z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-        <button
-          onClick={prevSlide}
-          className="bg-black bg-opacity-50 text-white p-2 rounded-full hover:bg-opacity-75"
-        >
-          ❮
-        </button>
-        <button
-          onClick={nextSlide}
-          className="bg-black bg-opacity-50 text-white p-2 rounded-full hover:bg-opacity-75"
-        >
-          ❯
-        </button>
-      </div>
-
-      {/* Indicadores */}
-      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 gap-2 z-30 hidden group-hover:flex">
-        {banners.map((_, idx) => (
-          <div
-            key={idx}
-            className={`w-3 h-3 rounded-full transition-colors ${
-              idx === currentIndex ? "bg-white" : "bg-gray-500"
-            }`}
-          />
-        ))}
-      </div>
-    </div>
+    </section>
   );
 }

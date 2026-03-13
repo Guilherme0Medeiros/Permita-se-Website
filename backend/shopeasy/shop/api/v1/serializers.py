@@ -48,6 +48,8 @@ class ProdutoSerializer(serializers.ModelSerializer):
 
 class ItemCarrinhoSerializer(serializers.ModelSerializer):
     produto_nome = serializers.CharField(source='produto.nome', read_only=True)
+    produto_preco = serializers.DecimalField(source='produto.preco', max_digits=10, decimal_places=2, read_only=True)
+    produto_imagem = serializers.SerializerMethodField()
 
     class Meta:
         model = ItemCarrinho
@@ -55,6 +57,12 @@ class ItemCarrinhoSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'carrinho': {'required': False}
         }
+
+    def get_produto_imagem(self, obj):
+        request = self.context.get("request")
+        if obj.produto.imagem and request:
+            return request.build_absolute_uri(obj.produto.imagem.url)
+        return None
 
 class CarrinhoSerializer(serializers.ModelSerializer):
     itens = ItemCarrinhoSerializer(many=True, required=False)

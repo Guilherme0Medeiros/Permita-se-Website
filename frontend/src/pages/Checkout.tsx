@@ -8,6 +8,7 @@ import { useCart } from "../context/CartContext"
 import Navbar from "../components/Navbar"
 import api from "../services/api"
 
+
 function capitalizeWords(str: string) {
   return str
     .toLowerCase()

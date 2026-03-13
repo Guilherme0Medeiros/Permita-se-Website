@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { motion } from "framer-motion"
 import { useAuth } from "../context/AuthContext"
+import { useCart } from "../context/CartContext"
 import { ProductCard } from "../components/ProductCard"
 import BannerCarousel from "../components/BannerCarousel"
 import CartSidebar from "../components/CartSidebar"
@@ -39,10 +40,9 @@ const itemVariants = {
 
 export default function Home() {
   const [produtos, setProdutos] = useState<Produto[]>([])
-  const [cartItems, setCartItems] = useState<Produto[]>([])
-  const [isCartOpen, setIsCartOpen] = useState(false)
   const navigate = useNavigate()
   const { isAuthenticated, logout } = useAuth()
+  const { addToCart } = useCart()
 
   useEffect(() => {
     api
@@ -59,92 +59,6 @@ export default function Home() {
       .catch(console.error)
   }, [])
 
-  const handleAddToCart = async (id: number) => {
-    const produto = produtos.find((p) => p.id === id)
-    if (!produto) return
-
-    try {
-      await api.post("/carrinhos/adicionar-item/", {
-        produto: id,
-        quantidade: 1,
-      })
-
-      setCartItems((prev) => {
-        const existingItem = prev.find((item) => item.id === id)
-        if (existingItem) {
-          return prev.map((item) =>
-            item.id === id ? { ...item, quantidade: item.quantidade + 1 } : item,
-          )
-        }
-
-        return [...prev, { ...produto, quantidade: 1 }]
-      })
-
-      setIsCartOpen(true)
-    } catch (error) {
-      console.error("Erro ao adicionar item no carrinho:", error)
-    }
-  }
-
-  const handleRemoveAllItem = async (id: number) => {
-    try {
-      const item = cartItems.find((item) => item.id === id)
-      if (!item) return
-
-      await api.delete("/carrinhos/remover-item/", {
-        data: { produto: id, quantidade: item.quantidade },
-      })
-
-      setCartItems((prev) => prev.filter((item) => item.id !== id))
-    } catch (error) {
-      console.error("Erro ao remover todo o item do carrinho:", error)
-    }
-  }
-
-  const increaseQuantity = async (id: number) => {
-    try {
-      await api.post("/carrinhos/adicionar-item/", {
-        produto: id,
-        quantidade: 1,
-      })
-
-      setCartItems((prev) =>
-        prev.map((item) =>
-          item.id === id ? { ...item, quantidade: item.quantidade + 1 } : item,
-        ),
-      )
-    } catch (error) {
-      console.error("Erro ao aumentar quantidade:", error)
-    }
-  }
-
-  const decreaseQuantity = async (id: number) => {
-    try {
-      await api.delete("/carrinhos/remover-item/", {
-        data: {
-          produto: id,
-          quantidade: 1,
-        },
-      })
-
-      setCartItems((prev) =>
-        prev
-          .map((item) =>
-            item.id === id && item.quantidade > 1
-              ? { ...item, quantidade: item.quantidade - 1 }
-              : item,
-          )
-          .filter((item) => item.quantidade > 0),
-      )
-    } catch (error) {
-      console.error("Erro ao diminuir quantidade:", error)
-    }
-  }
-
-  const handleCheckout = () => {
-    navigate("/checkout", { state: { cartItems } })
-  }
-
   const produtosEmPromocao = produtos.filter((produto) => produto.em_promocao === true)
 
   return (
@@ -152,8 +66,6 @@ export default function Home() {
       <Navbar
         isAuthenticated={isAuthenticated}
         logout={logout}
-        cartItems={cartItems}
-        setIsCartOpen={setIsCartOpen}
       />
 
       <main>
@@ -205,7 +117,7 @@ export default function Home() {
                       descricao={produto.descricao}
                       imagem={produto.imagem}
                       em_promocao={produto.em_promocao}
-                      onAddToCart={handleAddToCart}
+                      onAddToCart={addToCart}
                     />
                   </motion.div>
                 ))}
@@ -260,7 +172,7 @@ export default function Home() {
 
             <ProductCarousel
               produtos={produtos}
-              onAddToCart={handleAddToCart}
+              onAddToCart={addToCart}
               onClickCard={(id) => navigate(`/produto/${id}`)}
             />
           </div>
@@ -269,15 +181,7 @@ export default function Home() {
         <Footer />
       </main>
 
-      <CartSidebar
-        isOpen={isCartOpen}
-        onClose={() => setIsCartOpen(false)}
-        cartItems={cartItems}
-        onRemoveItem={handleRemoveAllItem}
-        onIncrease={increaseQuantity}
-        onDecrease={decreaseQuantity}
-        onCheckout={handleCheckout}
-      />
+      <CartSidebar />
     </div>
   )
 }

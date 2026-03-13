@@ -1,9 +1,10 @@
 "use client"
 
-import { useLocation, useNavigate } from "react-router-dom"
 import { useState } from "react"
+import { useNavigate } from "react-router-dom"
 import { ArrowLeft } from "lucide-react"
-import { Produto } from "../types/types"
+import { useAuth } from "../context/AuthContext"
+import { useCart } from "../context/CartContext"
 import Navbar from "../components/Navbar"
 import api from "../services/api"
 
@@ -16,10 +17,9 @@ function capitalizeWords(str: string) {
 }
 
 export default function Checkout() {
-  const location = useLocation()
   const navigate = useNavigate()
-  const cartItems: Produto[] = location.state?.cartItems || []
-
+  const { isAuthenticated, logout } = useAuth()
+  const { cartItems } = useCart()
   const [loading, setLoading] = useState(false)
 
   const total = cartItems.reduce(
@@ -49,10 +49,8 @@ export default function Checkout() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <Navbar
-        isAuthenticated={true}
-        logout={() => {}}
-        cartItems={cartItems}
-        setIsCartOpen={() => {}}
+        isAuthenticated={isAuthenticated}
+        logout={logout}
       />
 
       <main className="px-4 sm:px-6 lg:px-8 py-10 sm:py-14">

@@ -12,20 +12,18 @@ import {
 import { motion, AnimatePresence } from "framer-motion"
 import { useNavigate } from "react-router-dom"
 import { useAuth } from "../context/AuthContext"
+import { useCart } from "../context/CartContext"
 
 export default function PermitaSeHeader({
   isAuthenticated,
   logout,
-  cartItems,
-  setIsCartOpen,
 }: {
   isAuthenticated: boolean
   logout: () => void
-  cartItems: { quantidade: number }[]
-  setIsCartOpen: (open: boolean) => void
 }) {
   const navigate = useNavigate()
   const { isAdmin } = useAuth()
+  const { cartItems, setIsCartOpen } = useCart()
 
   const [showUserMenu, setShowUserMenu] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
@@ -67,25 +65,22 @@ export default function PermitaSeHeader({
       animate={{ y: 0 }}
       transition={spring}
     >
-      {/* Top bar */}
       <div className="bg-primary px-4 py-1.5 text-center">
         <p className="text-xs font-medium text-primary-foreground tracking-wide uppercase">
           Frete grátis acima de R$ 199 • Parcele em até 6x sem juros
         </p>
       </div>
 
-      {/* Main nav */}
       <div className="flex items-center justify-between px-4 sm:px-6 lg:px-8 py-3 max-w-7xl mx-auto">
         <motion.button
-  onClick={() => navigate("/")}
-  className="font-display text-2xl sm:text-3xl font-extrabold text-surface-dark-foreground uppercase tracking-tighter"
-  whileHover={{ scale: 1.02 }}
-  transition={spring}
->
-  Permita-se
-</motion.button>
+          onClick={() => navigate("/")}
+          className="font-display text-2xl sm:text-3xl font-extrabold text-surface-dark-foreground uppercase tracking-tighter"
+          whileHover={{ scale: 1.02 }}
+          transition={spring}
+        >
+          Permita-se
+        </motion.button>
 
-        {/* Search - desktop */}
         <div className="flex-1 max-w-md mx-6 hidden md:block">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -97,7 +92,6 @@ export default function PermitaSeHeader({
           </div>
         </div>
 
-        {/* Icons */}
         <div className="flex items-center gap-1 sm:gap-2">
           <button
             className="p-2 rounded-full text-surface-dark-foreground/80 hover:text-surface-dark-foreground hover:bg-surface-dark-foreground/10 transition-colors md:hidden"
@@ -218,7 +212,6 @@ export default function PermitaSeHeader({
         </div>
       </div>
 
-      {/* Categories bar - desktop */}
       <nav className="border-t border-surface-dark-foreground/10 hidden md:block">
         <div className="max-w-7xl mx-auto px-6 flex items-center justify-center gap-8 py-2.5">
           {categorias.map((cat) => (
@@ -240,7 +233,6 @@ export default function PermitaSeHeader({
         </div>
       </nav>
 
-      {/* Mobile menu */}
       <AnimatePresence>
         {isMobile && isMobileMenuOpen && (
           <motion.div
@@ -250,7 +242,6 @@ export default function PermitaSeHeader({
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
           >
-            {/* Mobile search */}
             <div className="px-4 pt-3">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />

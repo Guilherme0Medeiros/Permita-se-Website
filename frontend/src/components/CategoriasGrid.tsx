@@ -38,20 +38,19 @@ export default function CategoriasGrid() {
       id: 1,
       nome: "calças",
       titulo: "CALÇAS EM SALE",
-      imagem: "/img/calcas.jpg",
+      imagem: "/img/calças.webp",
     },
     {
       id: 2,
-      nome: "blusas",
-      titulo: "BLUSAS EM SALE",
-      imagem: "/img/blusas.jpg",
+      nome: "Camisetas",
+      titulo: "CAMISETAS EM SALE",
+      imagem: "/img/camisas.webp",
     },
     {
       id: 3,
-      nome: "macacões",
-      titulo: "MACACÕES EM SALE",
-      imagem:
-        "https://img.freepik.com/fotos-gratis/retrato-ao-ar-livre-de-uma-mulher-caucasiana-com-macacao-classico-com-batom-vermelho-de-ferias-fora-do-hotel-villa_343596-420.jpg",
+      nome: "Moletons",
+      titulo: "MOLETONS EM SALE",
+      imagem: "/img/moletons.webp",
     },
     {
       id: 4,
@@ -69,7 +68,7 @@ export default function CategoriasGrid() {
       id: 6,
       nome: "jaquetas",
       titulo: "JAQUETAS EM SALE",
-      imagem: "/img/jaquetas.jpg",
+      imagem: "/img/jaqueta.avif",
     },
   ]
 

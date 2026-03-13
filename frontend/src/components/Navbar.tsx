@@ -33,8 +33,8 @@ export default function PermitaSeHeader({
   const categorias = [
     "vestidos",
     "calças",
-    "macacões",
-    "blusas",
+    "moletons",
+    "camisetas",
     "shorts",
     "jaquetas",
   ]
